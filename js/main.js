@@ -48,6 +48,30 @@
 				$(this.el).append(new EntityListItemView({model:entity}).render().el);
 			}, this);
 			return this;
+		},
+	});
+	
+	var EntityAddView = Backbone.View.extend({
+		initialize: function() {
+			this.template = _.template($('#entity-add-item').html());
+			this.render();
+		},
+		
+		render: function(eventName) {
+			$(this.el).html(this.template());
+			return this;
+		},
+		
+		events: {
+			"click .add": "newEntity"
+		},
+		
+		newEntity: function(event) {
+			if (app.entityList)
+			{
+				app.entityList.push();
+			}
+			return false;
 		}
 	});
 	
@@ -166,6 +190,7 @@
 			this.entityListView = new EntityListView({model: this.entityList});
 			
 			$('#list').html(this.entityListView.render().el);
+			$('#addList').html(new EntityAddView().render().el);
 		}
 	});
 	
