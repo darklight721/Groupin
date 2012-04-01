@@ -1,9 +1,13 @@
 <script type="text/template" id="entity-list-item">
-	<div><div class='star <%= starred %>'>*</div><div><input class='name' value='<%= name %>' placeholder='Insert name here' /></div><div class='delete'>x</div></div>
+	<div>
+		<span class='star'><img src='css/res/star-<%= starred %>.png' alt='Star' width='18px' height='18px' /></span>
+		<span><input class='name' value='<%= name %>' placeholder='Insert name here' /></span>
+		<span class='delete'><img src='css/res/remove.png' alt='Remove' width='26px' height='26px' /></span>
+	</div>
 </script>
 
 <script type="text/template" id="entity-add-item">
-	<div class='add'>+</div>
+	<div class='add'><img src='css/res/add.png' alt='Add' width='26px' height='26px' /></div>
 </script>
 
 <script type="text/template" id="group-list-item">
