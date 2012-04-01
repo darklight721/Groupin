@@ -13,7 +13,7 @@
 	var Entity = Backbone.Model.extend({
 		defaults: {
 			starred: false,
-			name: 'Insert name here',
+			name: '',
 			group: 0
 		}
 	});
@@ -195,7 +195,7 @@
 	});
 	
 	var app;
-	util.loadTemplate('template',function(){
+	util.loadTemplates('template',function(){
 		app = new AppRouter();
 		Backbone.history.start();
 	});
