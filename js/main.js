@@ -53,8 +53,8 @@
 	
 	var EntityAddView = Backbone.View.extend({
 		initialize: function() {
-			this.template = _.template($('#entity-add-item').html());
-			this.render();
+			this.template = _.template($('#tpl-entity-add-item').html());
+			//this.render();
 		},
 		
 		render: function(eventName) {
@@ -79,7 +79,7 @@
 		tagName: 'div',
 		
 		initialize: function() {
-			this.template = _.template($('#entity-list-item').html());
+			this.template = _.template($('#tpl-entity-list-item').html());
 			this.model.bind("change", this.render, this);
 			this.model.bind("destroy", this.close, this);
 		},
@@ -120,6 +120,23 @@
 		}
 	});
 	
+	var AlterInputView = Backbone.View.extend({
+		tagName: 'div',
+		
+		initialize: function() {
+			this.template = _.template($('#tpl-alter-input-entity').html());
+		},
+		
+		render: function(eventName) {
+			$(this.el).html(this.template());
+			return this;
+		},
+		
+		events: {
+			"click .add": "newEntity"
+		}
+	});
+	
 	var GroupListView = Backbone.View.extend({
 		tagName: 'div',
 		
@@ -143,7 +160,7 @@
 		tagName: 'div',
 		
 		initialize: function() {
-			this.template = _.template($('#group-list-item').html());
+			this.template = _.template($('#tpl-group-list-item').html());
 			this.model.bind("change", this.render, this);
 			this.model.bind("destroy", this.close, this);
 		},
@@ -189,8 +206,8 @@
 			
 			this.entityListView = new EntityListView({model: this.entityList});
 			
-			$('#list').html(this.entityListView.render().el);
-			$('#addList').html(new EntityAddView().render().el);
+			$('#entity-list').html(this.entityListView.render().el);
+			$('#entity-add').html(new EntityAddView().render().el);
 		}
 	});
 	
