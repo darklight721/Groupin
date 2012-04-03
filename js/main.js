@@ -44,6 +44,7 @@
 		},
 		
 		render: function(eventName) {
+			$(this.el).html("");
 			_.each(this.model.models, function(entity){
 				$(this.el).append(new EntityListItemView({model:entity}).render().el);
 			}, this);
@@ -54,7 +55,6 @@
 	var EntityAddView = Backbone.View.extend({
 		initialize: function() {
 			this.template = _.template($('#tpl-entity-add-item').html());
-			//this.render();
 		},
 		
 		render: function(eventName) {
@@ -125,6 +125,7 @@
 		
 		initialize: function() {
 			this.template = _.template($('#tpl-alter-input-entity').html());
+			this.delimiter = '\n';
 		},
 		
 		render: function(eventName) {
@@ -133,7 +134,58 @@
 		},
 		
 		events: {
-			"click .add": "newEntity"
+			"change #delimiter": "change",
+			"change #otherDelimiter": "change",
+			"click #import": "import",
+			"change #fileInput": "readFile"
+		},
+		
+		readFile: function(event) {
+			var file = event.target.files ? event.target.files[0] : null;
+			
+			util.getDataFromFile(file, function(data){
+				$('#text').val(data);
+			});
+		},
+		
+		change: function(event) {
+			console.log(event.target.value);
+			if (event.target.value)
+			{
+				if ($('#delimiter').val() === 'other')
+				{
+					$('#otherDelimiter').show();
+				}
+				else
+				{
+					switch(event.target.value)
+					{
+						case '\\n': 
+							this.delimiter = '\n';
+							break;
+						case '\\t':
+							this.delimiter = '\t';
+							break;
+						default:
+							this.delimiter = event.target.value;
+							break;
+					}
+					$('#otherDelimiter').hide();
+				}
+			}
+		},
+		
+		import: function() {
+			var text = $('#text').val();
+			// reset model collection
+			app.entityList.reset();
+			_.each(text.split(this.delimiter), function(entity){
+				entity = $.trim(entity);
+				if (entity)
+				{
+					app.entityList.push({name:entity});
+				}
+			});
 		}
 	});
 	
@@ -208,6 +260,7 @@
 			
 			$('#entity-list').html(this.entityListView.render().el);
 			$('#entity-add').html(new EntityAddView().render().el);
+			$('#alter-input').html(new AlterInputView().render().el);
 		}
 	});
 	
