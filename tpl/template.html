@@ -18,8 +18,18 @@
 	</div>
 </script>
 
-<script type="text/template" id="#tpl-alter-input-entity">
-	
+<script type="text/template" id="tpl-alter-input-entity">
+	<input id='fileInput' type='file' />
+	<textarea id='text'></textarea>
+	<select id='delimiter'>
+		<option value=','>Comma</option>
+		<option value=' '>Space</option>
+		<option value='\t'>Tab</option>
+		<option value='\n' selected='selected'>New Line</option>
+		<option value='other'>Other...</option>
+	</select>
+	<input id='otherDelimiter' type='text' placeholder='Enter delimiter' style='display:none' />
+	<input id='import' type='button' value='Import' />
 </script>
 
 <script type="text/template" id="tpl-group-list-item">
