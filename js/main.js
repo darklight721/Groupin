@@ -218,11 +218,68 @@
 		},
 		
 		events: {
-			"change #groupCount": "change"
+			"change #groupCount": "change",
+			"click #groupin": "group"
 		},
 		
 		change: function(event) {
 			this.validateGroupCount();
+		},
+		
+		group: function() {
+			if (app.groupList)
+				app.groupList.reset();
+			else
+				app.groupList = new GroupCollection();
+				
+			// Create groups
+			var groupCount = parseInt($('#groupCount').val());
+			for (var i = 0; i < groupCount; i++)
+			{
+				app.groupList.push({name: "Group "+(i+1)});
+			}
+			
+			/*
+			
+			// Assign groups to members
+			var entities = app.entityList.models;
+			var starredEntities = [];
+			var j = 0;
+			while (entities.length)
+			{
+				for (j = 0; j < groupCount && entities.length; j++)
+				{
+					var index = Math.floor(Math.random() * entities.length);
+					entities.splice(index,1);
+					var entity = app.entityList.at(index);
+					if (entity.get('starred'))
+					{
+						starredEntities.push(entity);
+					}
+					else
+					{
+						app.entityList.getByCid(entity.cid).set({group: j});
+					}
+				}
+			}
+			
+			while(starredEntities.length)
+			{
+				for (; j < groupCount && starredEntities.length; j++)
+				{
+					var index = Math.floor(Math.random() * starredEntities.length);
+					entities.splice(index,1);
+					var entity = app.entityList.at(index);
+					app.entityList.getByCid(entity.cid).set({group: j});
+				}
+			}
+			
+			*/
+			
+			if (!app.groupListView)
+				app.groupListView = new GroupListView({model: app.groupList});
+			
+			$('#group-list').html(app.groupListView.render().el);
 		}
 		
 	});
@@ -239,6 +296,7 @@
 		},
 		
 		render: function(eventName) {
+			$(this.el).html("");
 			_.each(this.model.models, function(group){
 				$(this.el).append(new GroupListItemView({model:group}).render().el);
 			}, this);
@@ -261,24 +319,13 @@
 		},
 		
 		events: {
-			"change .name": "changeGroup",
-			"click .delete": "deleteGroup"
+			"change .name": "changeGroup"
 		},
 		
 		changeGroup: function(event) {
 			this.model.set({
 				name: event.target.value
 			});
-		},
-		
-		deleteGroup: function() {
-			this.model.destroy({
-				success: function() {
-					//alert('Entity deleted successfully');
-					//window.history.back();
-				}
-			});
-			return false;
 		}
 	});
 	
