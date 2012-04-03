@@ -189,6 +189,44 @@
 		}
 	});
 	
+	var ControlView = Backbone.View.extend({
+		tagName: 'div',
+		
+		initialize: function() {
+			this.template = _.template($('#tpl-control').html());
+			this.model.bind("add", this.setMaxGroupCount, this);
+			this.model.bind("destroy", this.setMaxGroupCount, this);
+		},
+		
+		render: function(event) {
+			$(this.el).html(this.template({"max":this.model.length}));
+			return this;
+		},
+		
+		setMaxGroupCount: function() {
+			$('#groupCount').attr("max",this.model.length);
+			
+			this.validateGroupCount();
+		},
+		
+		validateGroupCount: function() {
+			var value = parseInt($('#groupCount').val());
+			if (value < 1 || value > this.model.length)
+			{
+				$('#groupCount').val("1");
+			}
+		},
+		
+		events: {
+			"change #groupCount": "change"
+		},
+		
+		change: function(event) {
+			this.validateGroupCount();
+		}
+		
+	});
+	
 	var GroupListView = Backbone.View.extend({
 		tagName: 'div',
 		
@@ -261,6 +299,7 @@
 			$('#entity-list').html(this.entityListView.render().el);
 			$('#entity-add').html(new EntityAddView().render().el);
 			$('#alter-input').html(new AlterInputView().render().el);
+			$('#controls').html(new ControlView({model: this.entityList}).render().el);
 		}
 	});
 	
