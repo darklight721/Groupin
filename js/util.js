@@ -7,5 +7,21 @@ var util = {
 				callback();
 			}
 		});
+	},
+	
+	getDataFromFile: function(file,callback) {
+		if (file)
+		{
+			var reader = new FileReader();
+			
+			reader.onloadend = function(evt) {
+				if (evt.target.readyState === FileReader.DONE)
+				{
+					callback(evt.target.result);
+				}
+			};
+			
+			reader.readAsText(file);
+		}
 	}
 };
