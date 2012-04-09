@@ -24,6 +24,7 @@
 	
 	var Group = Backbone.Model.extend({
 		defaults: {
+			index: 0,
 			name: 'Group'
 		}
 	});
@@ -236,45 +237,22 @@
 			var groupCount = parseInt($('#groupCount').val());
 			for (var i = 0; i < groupCount; i++)
 			{
-				app.groupList.push({name: "Group "+(i+1)});
+				app.groupList.push({index: i, name: "Group "+(i+1)});
 			}
 			
-			/*
-			
-			// Assign groups to members
-			var entities = app.entityList.models;
-			var starredEntities = [];
-			var j = 0;
-			while (entities.length)
-			{
-				for (j = 0; j < groupCount && entities.length; j++)
-				{
-					var index = Math.floor(Math.random() * entities.length);
-					entities.splice(index,1);
-					var entity = app.entityList.at(index);
-					if (entity.get('starred'))
-					{
-						starredEntities.push(entity);
-					}
-					else
-					{
-						app.entityList.getByCid(entity.cid).set({group: j});
-					}
-				}
-			}
-			
-			while(starredEntities.length)
-			{
-				for (; j < groupCount && starredEntities.length; j++)
-				{
-					var index = Math.floor(Math.random() * starredEntities.length);
-					entities.splice(index,1);
-					var entity = app.entityList.at(index);
-					app.entityList.getByCid(entity.cid).set({group: j});
-				}
-			}
-			
-			*/
+			// Assign members to groups
+			var randomList = _.shuffle(app.entityList.where({starred: false}));
+			var randomStarredList = _.shuffle(app.entityList.where({starred: true}));
+
+			var groupIndex = 0;
+			_.each(randomList,function(entity){
+				entity.set("group",groupIndex);
+				groupIndex = (groupIndex+1) % groupCount;
+			});
+			_.each(randomStarredList,function(entity){
+				entity.set("group",groupIndex);
+				groupIndex = (groupIndex+1) % groupCount;
+			});
 			
 			if (!app.groupListView)
 				app.groupListView = new GroupListView({model: app.groupList});
@@ -309,12 +287,16 @@
 		
 		initialize: function() {
 			this.template = _.template($('#tpl-group-list-item').html());
+			this.templateForEntity = _.template($('#tpl-group-list-entity').html());
 			this.model.bind("change", this.render, this);
 			this.model.bind("destroy", this.close, this);
 		},
 		
 		render: function(eventName) {
 			$(this.el).html(this.template(this.model.toJSON()));
+			_.each(app.entityList.where({group: this.model.get("index")}), function(entity){
+				$(this.el).append(this.templateForEntity(entity.toJSON()));
+			}, this);
 			return this;
 		},
 		
