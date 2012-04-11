@@ -1,21 +1,11 @@
 <script type="text/template" id="tpl-entity-list-item">
-	<div>
-		<span class='star'>
-			<img src='css/res/star-<%= starred %>.png' alt='Star' width='18px' height='18px' />
-		</span>
-		<span>
-			<input class='name' value='<%= name %>' placeholder='Insert name here' />
-		</span>
-		<span class='delete'>
-			<img src='css/res/remove.png' alt='Remove' width='26px' height='26px' />
-		</span>
+	<div class='input-prepend input-append'>
+		<button class='star btn' type='button'><i class='icon-star'></i></button><input class='name span2' type='text' value='<%= name %>' placeholder='Insert name here' /><button class='delete btn btn-danger' type='button'><i class='icon-remove'></i></button>
 	</div>
 </script>
 
 <script type="text/template" id="tpl-entity-add-item">
-	<div class='add'>
-		<img src='css/res/add.png' alt='Add' width='26px' height='26px' />
-	</div>
+	<button class='add btn span2' type='button'><i class='icon-plus'></i></button>
 </script>
 
 <script type="text/template" id="tpl-alter-input-entity">

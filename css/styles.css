@@ -1,12 +1,14 @@
-.star
+.input-prepend
 {
-
+	margin-bottom: -10px;
 }
-.name
-{
 
-}
-.delete
+.input-prepend input, .input-append input
 {
-	
+	margin-top: 8px;
+}
+
+.add
+{
+	margin-top: 15px;
 }
