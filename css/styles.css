@@ -1,14 +1,19 @@
-.input-prepend
+#header
 {
-	margin-bottom: -10px;
+	margin-top: 10px;
 }
 
-.input-prepend input, .input-append input
+#entity-list .entity
 {
-	margin-top: 8px;
+	margin-bottom: 8px;
 }
 
-.add
+.font-small
 {
-	margin-top: 15px;
+	font-size: 10px;
+}
+
+input[type=number]
+{
+	text-align: right;
 }
