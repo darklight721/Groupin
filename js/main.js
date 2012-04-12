@@ -86,7 +86,10 @@
 		},
 		
 		render: function(eventName) {
-			$(this.el).html(this.template(this.model.toJSON()));
+			$(this.el).html(this.template({
+				name: this.model.get('name'),
+				star: this.model.get('starred') ? '' : '-empty'
+			}));
 			return this;
 		},
 		
