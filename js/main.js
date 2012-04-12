@@ -198,36 +198,51 @@
 		
 		initialize: function() {
 			this.template = _.template($('#tpl-control').html());
-			this.model.bind("add", this.setMaxGroupCount, this);
-			this.model.bind("destroy", this.setMaxGroupCount, this);
+			this.model.bind("add", this.render, this);
+			this.model.bind("destroy", this.render, this);
+			
+			this.groupCount = 1;
+			this.on("change:groupCount", this.render, this);
 		},
 		
 		render: function(event) {
-			$(this.el).html(this.template({"max":this.model.length}));
+			this.validateGroupCount();
+			var obj = {
+				"groupCount" : this.groupCount,
+				"plusDisabled" : this.groupCount < this.model.length ? '' : 'disabled',
+				"minusDisabled": this.groupCount > 1 ? '' : 'disabled'
+			};
+			$(this.el).html(this.template(obj));
 			return this;
 		},
 		
-		setMaxGroupCount: function() {
-			$('#groupCount').attr("max",this.model.length);
-			
-			this.validateGroupCount();
-		},
-		
 		validateGroupCount: function() {
-			var value = parseInt($('#groupCount').val());
-			if (value < 1 || value > this.model.length)
-			{
-				$('#groupCount').val("1");
-			}
+			if (this.groupCount < 1)
+				this.groupCount = 1;
+			else if (this.groupCount > this.model.length)
+				this.groupCount = this.model.length;
 		},
 		
 		events: {
 			"change #groupCount": "change",
+			"click .plus": "addOne",
+			"click .minus": "minusOne",
 			"click #groupin": "group"
 		},
 		
 		change: function(event) {
-			this.validateGroupCount();
+			this.groupCount = parseInt(event.target.value);
+			this.trigger("change:groupCount");
+		},
+		
+		addOne: function() {
+			this.groupCount++;
+			this.trigger("change:groupCount");
+		},
+		
+		minusOne: function() {
+			this.groupCount--;
+			this.trigger("change:groupCount");
 		},
 		
 		group: function() {
