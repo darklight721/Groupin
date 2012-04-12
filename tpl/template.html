@@ -10,8 +10,11 @@
 
 <script type="text/template" id="tpl-alter-input-entity">
 	<form class='form-vertical'>
+		<label for='text'><i class='icon-pencil'></i> Enter the names here and make sure to select the appropriate delimiter below</label>
+		<textarea id='text' rows='6'></textarea>
+		<label for='fileInput'><i class='icon-file'></i> Or you can just upload a text file</label>
 		<input id='fileInput' type='file' />
-		<textarea id='text'></textarea>
+		<label for='delimiter'>Delimiter</label>
 		<select id='delimiter'>
 			<option value=','>Comma</option>
 			<option value=' '>Space</option>
@@ -20,14 +23,14 @@
 			<option value='other'>Other...</option>
 		</select>
 		<input id='otherDelimiter' type='text' placeholder='Enter delimiter' style='display:none' />
-		<button id='import' class='btn' type='button'>Import</button>
+		<button id='import' class='btn' type='button'><i class='icon-backward'></i> Import</button>
 	</form>
 </script>
 
 <script type="text/template" id="tpl-control">
 	<form class='form-horizontal'>
 		<div class='input-prepend input-append'>
-			<span class='add-on font-small'>No. of groups</span><input id='groupCount' class='span1' type='text' value='<%= groupCount %>' /><button class='btn plus <%= plusDisabled %>' type='button'><i class='icon-plus-sign'></i></button><button class='btn minus <%= minusDisabled %>' type='button'><i class='icon-minus-sign'></i></button>
+			<span class='add-on font-small'>No. of groups</span><input id='groupCount' class='span1 text-center' type='text' value='<%= groupCount %>' /><button class='btn plus <%= plusDisabled %>' type='button'><i class='icon-plus-sign'></i></button><button class='btn minus <%= minusDisabled %>' type='button'><i class='icon-minus-sign'></i></button>
 		</div>
 		<button id='groupin' class='btn btn-primary' type='button'>Start Groupin!</button>
 	</form>

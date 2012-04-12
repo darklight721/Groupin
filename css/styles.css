@@ -13,7 +13,12 @@
 	font-size: 10px;
 }
 
-input[type=number]
+.text-center
 {
-	text-align: right;
+	text-align: center;
+}
+
+#groupin
+{
+	margin-left: 10px;
 }

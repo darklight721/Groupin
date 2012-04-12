@@ -217,7 +217,9 @@
 		},
 		
 		validateGroupCount: function() {
-			if (this.groupCount < 1)
+			if (isNaN(this.groupCount))
+				this.groupCount = 1;
+			else if (this.groupCount < 1)
 				this.groupCount = 1;
 			else if (this.groupCount > this.model.length)
 				this.groupCount = this.model.length;
@@ -347,6 +349,9 @@
 			$('#entity-add').html(new EntityAddView().render().el);
 			$('#alter-input').html(new AlterInputView().render().el);
 			$('#controls').html(new ControlView({model: this.entityList}).render().el);
+
+			// add additional ui
+			$('.star').tooltip({animation:true,title:'Starred names will be distributed fairly and equally among the groups.',delay:{show:800,hide:100}});
 		}
 	});
 	
