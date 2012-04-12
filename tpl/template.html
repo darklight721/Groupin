@@ -1,6 +1,6 @@
 <script type="text/template" id="tpl-entity-list-item">
-	<div class='input-prepend input-append'>
-		<button class='star btn' type='button'><i class='icon-star'></i></button><input class='name span2' type='text' value='<%= name %>' placeholder='Insert name here' /><button class='delete btn btn-danger' type='button'><i class='icon-remove'></i></button>
+	<div class='entity input-prepend input-append'>
+		<button class='star btn' type='button'><i class='icon-star<%= star %>'></i></button><input class='name span2' type='text' value='<%= name %>' placeholder='Insert name here' /><button class='delete btn btn-danger' type='button'><i class='icon-remove'></i></button>
 	</div>
 </script>
 
@@ -9,22 +9,28 @@
 </script>
 
 <script type="text/template" id="tpl-alter-input-entity">
-	<input id='fileInput' type='file' />
-	<textarea id='text'></textarea>
-	<select id='delimiter'>
-		<option value=','>Comma</option>
-		<option value=' '>Space</option>
-		<option value='\t'>Tab</option>
-		<option value='\n' selected='selected'>New Line</option>
-		<option value='other'>Other...</option>
-	</select>
-	<input id='otherDelimiter' type='text' placeholder='Enter delimiter' style='display:none' />
-	<input id='import' type='button' value='Import' />
+	<form class='form-vertical'>
+		<input id='fileInput' type='file' />
+		<textarea id='text'></textarea>
+		<select id='delimiter'>
+			<option value=','>Comma</option>
+			<option value=' '>Space</option>
+			<option value='\t'>Tab</option>
+			<option value='\n' selected='selected'>New Line</option>
+			<option value='other'>Other...</option>
+		</select>
+		<input id='otherDelimiter' type='text' placeholder='Enter delimiter' style='display:none' />
+		<button id='import' class='btn' type='button'>Import</button>
+	</form>
 </script>
 
 <script type="text/template" id="tpl-control">
-	<input id='groupCount' type='number' min='1' max='<%= max %>' value='1' />
-	<input id='groupin' type='button' value='Start Groupin!' />
+	<form class='form-horizontal'>
+		<div class='input-append'>
+			<input id='groupCount' class='span1' type='number' min='1' max='<%= max %>' value='1' /><span class='add-on font-small'>groups</span>
+		</div>
+		<button id='groupin' class='btn btn-primary' type='button'>Start Groupin!</button>
+	</form>
 </script>
 
 <script type="text/template" id="tpl-group-list-item">
