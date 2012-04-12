@@ -26,8 +26,8 @@
 
 <script type="text/template" id="tpl-control">
 	<form class='form-horizontal'>
-		<div class='input-append'>
-			<input id='groupCount' class='span1' type='number' min='1' max='<%= max %>' value='1' /><span class='add-on font-small'>groups</span>
+		<div class='input-prepend input-append'>
+			<span class='add-on font-small'>No. of groups</span><input id='groupCount' class='span1' type='text' value='<%= groupCount %>' /><button class='btn plus <%= plusDisabled %>' type='button'><i class='icon-plus-sign'></i></button><button class='btn minus <%= minusDisabled %>' type='button'><i class='icon-minus-sign'></i></button>
 		</div>
 		<button id='groupin' class='btn btn-primary' type='button'>Start Groupin!</button>
 	</form>
