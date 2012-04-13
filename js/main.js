@@ -64,12 +64,22 @@
 		},
 		
 		events: {
-			"click .add": "newEntity"
+			"click .add": "newEntity",
+			"click a": "newEntity"
 		},
 		
 		newEntity: function(event) {
 			if (app.entityList)
 			{
+				if (event.target.dataset && event.target.dataset.value)
+				{
+					var count = parseInt(event.target.dataset.value);
+					if (!isNaN(count))
+					{
+						for (var i=1; i < count; i++)
+							app.entityList.push();
+					}
+				}
 				app.entityList.push();
 			}
 			return false;
