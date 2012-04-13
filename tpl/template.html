@@ -28,7 +28,7 @@
 		<textarea id='text' rows='10'></textarea>
 		<label for='fileInput'><i class='icon-file'></i> Or you can just upload a text file</label>
 		<input id='fileInput' type='file' />
-		<label for='delimiter'>Delimiter</label>
+		<label for='delimiter'><i class='icon-asterisk'></i> Delimiter</label>
 		<select id='delimiter'>
 			<option value=','>Comma</option>
 			<option value=' '>Space</option>
@@ -51,14 +51,16 @@
 </script>
 
 <script type="text/template" id="tpl-group-list-item">
-    <div>
-		<span class='name'><%= name %></span>
+    <div class='span3'>
+		<form class='form-horizontal'>
+			<input class='name' type='text' value='<%= name %>' />
+			<div class='group-entity'></div>
+		</form>
 	</div>
 </script>
 
 <script type="text/template" id="tpl-group-list-entity">
-    <div>
-    	<img src='css/res/star-<%= starred %>.png' alt='Star' width='18px' height='18px' />
-		<span class='name'><%= name %></span>
+	<div class='input-prepend'>
+		<span class='add-on'><i class='icon-star<%= star %>'></i></span><input class='span2' type='text' value='<%= name %>' readonly='readonly' />
 	</div>
 </script>
