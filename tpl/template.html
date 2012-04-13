@@ -5,7 +5,17 @@
 </script>
 
 <script type="text/template" id="tpl-entity-add-item">
-	<button class='add btn span2' type='button'><i class='icon-plus'></i></button>
+	<div class='btn-group'>
+		<button class='add btn span2' type='button' data-value='1'><i class='icon-plus'></i></button>
+		<button class='btn dropdown-toggle' data-toggle='dropdown'>
+			<span class='caret'></span>
+		</button>
+		<ul class='dropdown-menu span1'>
+			<li><a href='#' data-value='2'><i class='icon-plus'></i> 2 more</a></li>
+			<li><a href='#' data-value='5'><i class='icon-plus'></i> 5 more</a></li>
+			<li><a href='#' data-value='10'><i class='icon-plus'></i> 10 more</a></li>
+		</ul>
+	</div>
 </script>
 
 <script type="text/template" id="tpl-alter-input-btn">
