@@ -358,19 +358,36 @@
 		
 		render: function(eventName) {
 			$(this.el).html(this.template(this.model.toJSON()));
-			var el_groupEntity = $(this.el).find(".group-entity");
-			_.each(app.entityList.where({group: this.model.get("index")}), function(entity){
+
+			var el_groupEntity = $(this.el).find(".group-entity-list");
+			var groupEntities = app.entityList.where({group: this.model.get("index")});
+			_.each( groupEntities, function(entity){
 				var obj = {
 					"star" : entity.get("starred") ? "" : "-empty",
-					"name" : entity.get("name")
+					"name" : entity.get("name"),
+					"hidden" : ""
 				};
 				$(el_groupEntity).append(this.templateForEntity(obj));
 			}, this);
+
+			// somehow needed to add a hidden div to correct misalignments of groupings
+			var groupCount = parseInt($('#groupCount').val());
+			var totalEntities = app.entityList.length;
+			if (groupEntities.length !== Math.ceil(totalEntities/groupCount))
+			{
+				var obj = {
+					"star" : "",
+					"name" : "",
+					"hidden" : "hidden"
+				};
+				$(el_groupEntity).append(this.templateForEntity(obj));
+			}
+
 			return this;
 		},
 		
 		events: {
-			"change .name": "changeGroup"
+			"change .group-name": "changeGroup"
 		},
 		
 		changeGroup: function(event) {

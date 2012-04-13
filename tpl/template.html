@@ -53,14 +53,14 @@
 <script type="text/template" id="tpl-group-list-item">
     <div class='span3'>
 		<form class='form-horizontal'>
-			<input class='name' type='text' value='<%= name %>' />
-			<div class='group-entity'></div>
+			<input class='group-name' type='text' value='<%= name %>' />
+			<div class='group-entity-list'></div>
 		</form>
 	</div>
 </script>
 
 <script type="text/template" id="tpl-group-list-entity">
-	<div class='input-prepend'>
+	<div class='group-entity input-prepend <%= hidden %>'>
 		<span class='add-on'><i class='icon-star<%= star %>'></i></span><input class='span2' type='text' value='<%= name %>' readonly='readonly' />
 	</div>
 </script>
