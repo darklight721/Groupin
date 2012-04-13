@@ -27,3 +27,9 @@
 {
 	margin-bottom: 10px;
 }
+
+input[readonly=readonly]
+{
+	cursor: default;
+	background-color: white;
+}
