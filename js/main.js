@@ -124,6 +124,36 @@
 		}
 	});
 	
+	var AlterInputBtn = Backbone.View.extend({
+		tagName: 'div',
+		
+		initialize: function() {
+			this.el_AlterInputView = $('#alter-input')[0];
+			this.templateForBtn = _.template($('#tpl-alter-input-btn').html());
+			
+			this.alterInputShow = true;
+			this.on("change:alterInputShow", this.render, this);
+			
+			// hide alter input view initially
+			this.toggleAlterView();
+		},
+		
+		render: function(eventName) {
+			$(this.el).html(this.templateForBtn({"direction":this.alterInputShow?'left':'right'}));
+			return this;
+		},
+		
+		events: {
+			"click #alterInputBtn": "toggleAlterView"
+		},
+		
+		toggleAlterView: function() {
+			$(this.el_AlterInputView).toggle();
+			this.alterInputShow = !(this.alterInputShow);
+			this.trigger("change:alterInputShow");
+		},
+	});
+	
 	var AlterInputView = Backbone.View.extend({
 		tagName: 'div',
 		
@@ -277,6 +307,10 @@
 			if (!app.groupListView)
 				app.groupListView = new GroupListView({model: app.groupList});
 			
+			// hide alter input view 
+			if (app.alterInputBtn.alterInputShow)
+				app.alterInputBtn.toggleAlterView();
+			
 			$('#group-list').html(app.groupListView.render().el);
 		}
 		
@@ -344,9 +378,11 @@
 			this.entityList.push();
 			
 			this.entityListView = new EntityListView({model: this.entityList});
+			this.alterInputBtn = new AlterInputBtn();
 			
 			$('#entity-list').html(this.entityListView.render().el);
 			$('#entity-add').html(new EntityAddView().render().el);
+			$('#alter-input-toggler').html(this.alterInputBtn.render().el);
 			$('#alter-input').html(new AlterInputView().render().el);
 			$('#controls').html(new ControlView({model: this.entityList}).render().el);
 
