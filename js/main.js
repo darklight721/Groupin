@@ -358,8 +358,13 @@
 		
 		render: function(eventName) {
 			$(this.el).html(this.template(this.model.toJSON()));
+			var el_groupEntity = $(this.el).find(".group-entity");
 			_.each(app.entityList.where({group: this.model.get("index")}), function(entity){
-				$(this.el).append(this.templateForEntity(entity.toJSON()));
+				var obj = {
+					"star" : entity.get("starred") ? "" : "-empty",
+					"name" : entity.get("name")
+				};
+				$(el_groupEntity).append(this.templateForEntity(obj));
 			}, this);
 			return this;
 		},
