@@ -33,3 +33,44 @@ input[readonly=readonly]
 	cursor: default;
 	background-color: white;
 }
+
+#brand div
+{
+	color: #444;
+	font-family: 'Patua One', cursive;
+	display: inline-block;
+	padding: 5px;
+	cursor: default;
+}
+
+#brand div:nth-of-type(1)
+{
+	background-color: #9CC5C9;
+	border-radius: 5px 0px 0px 5px;
+	border-left: solid 5px #444;
+	border-top: solid 5px #444;
+	border-bottom: solid 5px #444;
+}
+
+#brand div:nth-of-type(2)
+{
+	background-color: #D5544F;
+	border-top: solid 5px #444;
+	border-bottom: solid 5px #444;
+}
+
+#brand div:nth-of-type(3)
+{
+	background-color: #CDB599;
+	border-top: solid 5px #444;
+	border-bottom: solid 5px #444;
+}
+
+#brand div:nth-of-type(4)
+{
+	background-color: #A08689;
+	border-radius: 0px 5px 5px 0px;
+	border-right: solid 5px #444;
+	border-top: solid 5px #444;
+	border-bottom: solid 5px #444;
+}
