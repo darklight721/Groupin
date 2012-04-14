@@ -23,24 +23,24 @@
 </script>
 
 <script type="text/template" id="tpl-alter-input-entity">
-	<div class='alter-input'>
-	<form class='form-vertical'>
-		<legend>Alternative Input</legend>
-		<label for='text'><i class='icon-pencil'></i> Enter the list of names here and make sure to select the appropriate delimiter below</label>
-		<textarea id='text' rows='10'></textarea>
-		<label for='fileInput'><i class='icon-file'></i> Or you can just upload a text file</label>
-		<input id='fileInput' type='file' />
-		<label for='delimiter'><i class='icon-asterisk'></i> Delimiter</label>
-		<select id='delimiter'>
-			<option value=','>Comma</option>
-			<option value=' '>Space</option>
-			<option value='\t'>Tab</option>
-			<option value='\n' selected='selected'>New Line</option>
-			<option value='other'>Other...</option>
-		</select>
-		<input id='otherDelimiter' type='text' placeholder='Enter delimiter' style='display:none' />
-		<button id='import' class='btn' type='button'><i class='icon-backward'></i> Import</button>
-	</form>
+	<div class='drop-shadow'>
+		<form class='form-vertical'>
+			<legend>Alternative Input</legend>
+			<label for='text'><i class='icon-pencil'></i> Enter the list of names here and make sure to select the appropriate delimiter below</label>
+			<textarea id='text' rows='10'></textarea>
+			<label for='fileInput'><i class='icon-file'></i> Or you can just upload a text file</label>
+			<input id='fileInput' type='file' />
+			<label for='delimiter'><i class='icon-asterisk'></i> Delimiter</label>
+			<select id='delimiter'>
+				<option value=','>Comma</option>
+				<option value=' '>Space</option>
+				<option value='\t'>Tab</option>
+				<option value='\n' selected='selected'>New Line</option>
+				<option value='other'>Other...</option>
+			</select>
+			<input id='otherDelimiter' type='text' placeholder='Enter delimiter' style='display:none' />
+			<button id='import' class='btn' type='button'><i class='icon-backward'></i> Import</button>
+		</form>
 	</div>
 </script>
 
@@ -55,10 +55,12 @@
 
 <script type="text/template" id="tpl-group-list-item">
     <div class='span3'>
-		<form class='form-horizontal'>
-			<input class='group-name' type='text' value='<%= name %>' />
-			<div class='group-entity-list'></div>
-		</form>
+    	<div class="well">
+			<form class='form-horizontal'>
+				<input class='group-name' type='text' value='<%= name %>' />
+				<div class='group-entity-list'></div>
+			</form>
+		</div>
 	</div>
 </script>
 

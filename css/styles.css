@@ -46,6 +46,7 @@ input[readonly=readonly]
 	display: inline-block;
 	padding: 5px;
 	cursor: default;
+	box-shadow: 0px 0px 10px rgba(4,4,4,0.3) inset;
 }
 
 #brand div:nth-of-type(1)
@@ -85,6 +86,15 @@ input[readonly=readonly]
 	margin-top: 30px;
 }
 
+.group-list
+{
+	border: solid 1px #eee;
+	border-radius: 5px;
+	padding-top: 10px;
+	padding-left: 20px;
+	margin-bottom: 20px;
+}
+
 .group-name
 {
 	border-top: none;
@@ -93,6 +103,8 @@ input[readonly=readonly]
 	border-radius: 0px;
 	box-shadow: none;
 	outline:none;
+	background-color: transparent;
+	font-weight: bold;
 }
 
 .group-entity-list
@@ -110,11 +122,12 @@ legend
 	margin-bottom: 15px;
 }
 
-.alter-input
+.drop-shadow
 {
 	border-radius: 0px 0px 5px 0px;
 	border-right: solid 1px #eee;
 	border-bottom:solid 1px #eee;
+	box-shadow: 5px 5px 10px #eee;
 	padding-right: 5px;
 }
 
