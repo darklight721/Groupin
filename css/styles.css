@@ -5,7 +5,12 @@
 
 #entity-list .entity
 {
-	margin-bottom: 8px;
+	margin-bottom: 5px;
+}
+
+#entity-add
+{
+	margin-top: 3px;
 }
 
 .font-small
@@ -98,4 +103,14 @@ input[readonly=readonly]
 .group-entity
 {
 	margin-top: 5px;
+}
+
+legend
+{
+	margin-bottom: 15px;
+}
+
+body
+{
+	
 }
