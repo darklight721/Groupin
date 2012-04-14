@@ -412,8 +412,10 @@
 		home: function() {
 			this.entityList = new EntityCollection();
 			
-			this.entityList.push();
-			this.entityList.push();
+			for (var i=0; i<10; i++)
+			{
+				this.entityList.push();
+			}
 			
 			this.entityListView = new EntityListView({model: this.entityList});
 			this.alterInputBtn = new AlterInputBtn();
