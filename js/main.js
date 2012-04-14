@@ -96,13 +96,15 @@
 			this.template = _.template($('#tpl-entity-list-item').html());
 			this.model.bind("change", this.render, this);
 			this.model.bind("destroy", this.close, this);
+
+			this.tabIndex = tabIndex;
 		},
 		
 		render: function(eventName) {
 			$(this.el).html(this.template({
 				name: this.model.get('name'),
 				star: this.model.get('starred') ? '' : '-empty',
-				tabIndex: tabIndex
+				tabIndex: this.tabIndex
 			}));
 			return this;
 		},
