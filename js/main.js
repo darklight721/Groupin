@@ -1,5 +1,7 @@
 (function($){
 
+	var tabIndex = 1;
+
 	Backbone.View.prototype.close = function() {
 		console.log('Closing View ' + this);
 		if (this.beforeClose) 
@@ -41,6 +43,7 @@
 			var self = this;
 			this.model.bind("add", function(entity){
 				$(self.el).append(new EntityListItemView({model:entity}).render().el);
+				tabIndex++;
 			});
 		},
 		
@@ -98,7 +101,8 @@
 		render: function(eventName) {
 			$(this.el).html(this.template({
 				name: this.model.get('name'),
-				star: this.model.get('starred') ? '' : '-empty'
+				star: this.model.get('starred') ? '' : '-empty',
+				tabIndex: tabIndex
 			}));
 			return this;
 		},
