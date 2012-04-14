@@ -110,6 +110,14 @@ legend
 	margin-bottom: 15px;
 }
 
+.alter-input
+{
+	border-radius: 0px 0px 5px 0px;
+	border-right: solid 1px #eee;
+	border-bottom:solid 1px #eee;
+	padding-right: 5px;
+}
+
 body
 {
 	

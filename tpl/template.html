@@ -19,12 +19,14 @@
 </script>
 
 <script type="text/template" id="tpl-alter-input-btn">
-	<button id='alterInputBtn' class='btn btn-mini' type='button'><i class='icon-chevron-<%= direction %>'></i></button>
+	<button id='alterInputBtn' class='btn btn-mini' type='button' title='Alternative Input'><i class='icon-chevron-<%= direction %>'></i></button>
 </script>
 
 <script type="text/template" id="tpl-alter-input-entity">
+	<div class='alter-input'>
 	<form class='form-vertical'>
-		<label for='text'><i class='icon-pencil'></i> Enter the names here and make sure to select the appropriate delimiter below</label>
+		<legend>Alternative Input</legend>
+		<label for='text'><i class='icon-pencil'></i> Enter the list of names here and make sure to select the appropriate delimiter below</label>
 		<textarea id='text' rows='10'></textarea>
 		<label for='fileInput'><i class='icon-file'></i> Or you can just upload a text file</label>
 		<input id='fileInput' type='file' />
@@ -39,6 +41,7 @@
 		<input id='otherDelimiter' type='text' placeholder='Enter delimiter' style='display:none' />
 		<button id='import' class='btn' type='button'><i class='icon-backward'></i> Import</button>
 	</form>
+	</div>
 </script>
 
 <script type="text/template" id="tpl-control">
