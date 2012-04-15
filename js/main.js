@@ -84,6 +84,9 @@
 					}
 				}
 				app.entityList.push();
+				// scroll down entity-list
+				$('#entity-list').scrollTop(9999);
+
 			}
 			return false;
 		}
@@ -428,6 +431,11 @@
 
 			// add additional ui
 			$('.star').tooltip({animation:true,title:'Starred names will be distributed fairly and equally among the groups.',delay:{show:800,hide:100}});
+			$('#entity-list').css("max-height",(window.innerHeight-$('#entity-list').offset().top-60)+"px");
+			$(window).resize(function(){
+				$('#entity-list').css("max-height",(window.innerHeight-$('#entity-list').offset().top-60)+"px");
+			});
+
 		}
 	});
 	

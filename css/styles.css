@@ -13,7 +13,7 @@
 
 #entity-add
 {
-	margin-top: 3px;
+	margin-top: 5px;
 }
 
 .font-small
@@ -133,6 +133,18 @@ legend
 	box-shadow: 5px 5px 10px #eee;
 	padding-left: 5px;
 	padding-right: 5px;
+}
+
+#entity-list
+{
+	padding-left: 2px;
+	max-height: 800px;
+	overflow: auto;
+}
+
+.name
+{
+	width: 160px;
 }
 
 body
