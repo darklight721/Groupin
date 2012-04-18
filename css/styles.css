@@ -84,7 +84,7 @@ input[readonly=readonly]
 	border-bottom: solid 5px #444;
 }
 
-#controls
+#controls, #share
 {
 	margin-top: 30px;
 }
@@ -149,5 +149,6 @@ legend
 
 body
 {
-	
+	width: 1170px;
+	margin: auto;
 }

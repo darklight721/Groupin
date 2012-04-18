@@ -34,6 +34,14 @@
 	var GroupCollection = Backbone.Collection.extend({
 		model: Group
 	});
+
+	var GroupinModel = Backbone.Model.extend({
+		urlRoot: "api/groupin",
+		defaults: {
+			"entities": '',
+			"groups": ''
+		}
+	});
 	
 	var EntityListView = Backbone.View.extend({
 		tagName: 'div',
@@ -331,6 +339,14 @@
 				app.alterInputBtn.toggleAlterView();
 			
 			$('#group-list').html(app.groupListView.render().el);
+
+			// show share button
+			if (!app.shareBtnView)
+			{
+				app.shareBtnView = new ShareBtnView();
+				$('#share').html(app.shareBtnView.render().el);	
+			}			
+			
 		}
 		
 	});
@@ -402,6 +418,38 @@
 		changeGroup: function(event) {
 			this.model.set({
 				name: event.target.value
+			});
+		}
+	});
+
+	var ShareBtnView = Backbone.View.extend({
+
+		initialize: function() {
+			this.template = _.template($('#tpl-share-btn').html());
+		},
+
+		render: function(eventName) {
+			$(this.el).html(this.template());
+			return this;
+		},
+
+		events: {
+			"click .share": "shareGroupin"
+		},
+
+		shareGroupin: function() {
+			var groupin = new GroupinModel();
+			groupin.set({
+				entities: JSON.stringify(app.entityList.toJSON()),
+				groups: JSON.stringify(app.groupList.toJSON())
+			});
+			groupin.save({
+				success: function() {
+					alert("sucess");
+				},
+				error: function() {
+					alert("error");
+				}
 			});
 		}
 	});
