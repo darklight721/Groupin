@@ -34,7 +34,7 @@ function addGroupin() {
 		$stmt->bindParam("entities", $groupin->entities);
 		$stmt->bindParam("groups", $groupin->groups);
 		$stmt->execute();
-		//$groupin->id = $db->lastInsertId();
+		$groupin->id = $db->lastInsertId();
 		$db = null;
 		echo json_decode($groupin);
 	} catch(PDOException $e) {
