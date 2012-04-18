@@ -36,7 +36,7 @@ function addGroupin() {
 		$stmt->execute();
 		$groupin->id = $db->lastInsertId();
 		$db = null;
-		echo json_decode($groupin);
+		echo json_encode($groupin);
 	} catch(PDOException $e) {
 		echo '{"error":{"text":'. $e->getMessage() .'}}';
 	}
