@@ -1,6 +1,6 @@
 (function($){
 
-	var tabIndex = 1;
+	var tabIndex = 9999;
 
 	Backbone.View.prototype.close = function() {
 		console.log('Closing View ' + this);
@@ -11,6 +11,8 @@
 		this.remove();
 		this.unbind();
 	}
+
+	// ** ENTITIES **********************************************************************************
 
 	var Entity = Backbone.Model.extend({
 		defaults: {
@@ -24,87 +26,109 @@
 		model: Entity
 	});
 	
-	var Group = Backbone.Model.extend({
-		defaults: {
-			index: 0,
-			name: 'Group'
-		}
-	});
-	
-	var GroupCollection = Backbone.Collection.extend({
-		model: Group
-	});
-
-	var GroupinModel = Backbone.Model.extend({
-		urlRoot: "api/groupin",
-		defaults: {
-			"entities": '',
-			"groups": ''
-		}
-	});
-	
-	var EntityListView = Backbone.View.extend({
+	var EntityMainView = Backbone.View.extend({
 		tagName: 'div',
 		
 		initialize: function() {
-			this.model.bind("reset", this.render, this);
+			// load templates
+			this.tpl_main = _.template($('#tpl-entity-main').html());
+			this.tpl_alter_input_toggler = _.template($('#tpl-alter-input-toggler').html());
+			this.tpl_entity_count = _.template($('#tpl-entity-count').html());
+			
+			// bind model
+			this.model.bind('reset', this.renderEntities, this);
+			this.model.bind('remove', this.renderEntityCount, this);
 			var self = this;
-			this.model.bind("add", function(entity){
-				$(self.el).append(new EntityListItemView({model:entity}).render().el);
-				tabIndex++;
+			this.model.bind('add', function(entity){
+				var el_entity_list = $(self.el).find('#entity-list');
+				$(el_entity_list).prepend(new EntityListItemView({model:entity}).render().el);
+				tabIndex--;
+				self.renderEntityCount();
 			});
+			
+			this.alterInputShow = true;
+			this.on("change:alterInputShow", this.renderAlterInputToggler, this);
+			
 		},
 		
 		render: function(eventName) {
-			$(this.el).html("");
+			$(this.el).html(this.tpl_main());
+			this.renderAlterInputToggler();
+			this.renderEntities();
+			this.toggleAlterInput();
+			return this;
+		},
+		
+		renderAlterInputToggler: function() {
+			var el_alter_input_toggler = $(this.el).find('#alter-input-toggler');
+			$(el_alter_input_toggler).html(this.tpl_alter_input_toggler({"direction":this.alterInputShow?'left':'right'}));
+		},
+		
+		renderEntities: function() {
+			// render entity list items	
+			var el_entity_list = $(this.el).find('#entity-list');
+			$(el_entity_list).html('');
 			_.each(this.model.models, function(entity){
-				$(this.el).append(new EntityListItemView({model:entity}).render().el);
+				$(el_entity_list).prepend(new EntityListItemView({model:entity}).render().el);
 			}, this);
-			return this;
-		},
-	});
-	
-	var EntityAddView = Backbone.View.extend({
-		initialize: function() {
-			this.template = _.template($('#tpl-entity-add-item').html());
+			
+			this.renderEntityCount();
 		},
 		
-		render: function(eventName) {
-			$(this.el).html(this.template());
-			return this;
+		renderEntityCount: function() {
+			// render entity count
+			var el_entity_count = $(this.el).find('#entity-count');
+			$(el_entity_count).html(this.tpl_entity_count({"count":this.model.length}));
 		},
 		
 		events: {
-			"click .add": "newEntity",
-			"click a": "newEntity"
+			"click #alter-input-toggler" : "toggleAlterInput",
+			"keypress #entity-name" : "enterName",
+			"click #entity-add" : "addEntity",
+			"click #entity-reset" : "resetEntity"
 		},
 		
-		newEntity: function(event) {
-			if (app.entityList)
+		toggleAlterInput: function() {
+			$("#alter-input").toggle();
+			this.alterInputShow = !(this.alterInputShow);
+			this.trigger("change:alterInputShow");
+		},
+		
+		enterName: function(e) {
+			if (e.keyCode === 13) // on enter keypress
 			{
-				if (event.target.dataset && event.target.dataset.value)
-				{
-					var count = parseInt(event.target.dataset.value);
-					if (!isNaN(count))
-					{
-						for (var i=1; i < count; i++)
-							app.entityList.push();
-					}
-				}
-				app.entityList.push();
-				// scroll down entity-list
-				$('#entity-list').scrollTop(9999);
-
+				e.preventDefault();
+				this.addEntity();
+				return false;
 			}
-			return false;
+		},
+		
+		addEntity: function() {
+			var entityName = $.trim($('#entity-name').val());
+			if(entityName.length > 0)
+			{
+				this.model.push({
+					starred: false,
+					name: entityName,
+					group: 0
+				});
+			}
+			
+			// clear value
+			$('#entity-name').val('');
+			$('#entity-name').focus();
+		},
+		
+		resetEntity: function() {
+			this.model.reset();
 		}
 	});
 	
 	var EntityListItemView = Backbone.View.extend({
-		tagName: 'div',
+		tagName: 'li',
 		
 		initialize: function() {
-			this.template = _.template($('#tpl-entity-list-item').html());
+			this.template = _.template($('#tpl-entity-list').html());
 			this.model.bind("change", this.render, this);
 			this.model.bind("destroy", this.close, this);
 
@@ -121,9 +145,9 @@
 		},
 		
 		events: {
-			"change .name": "changeEntity",
-			"click .star": "starEntity",
-			"click .delete": "deleteEntity"
+			"change .entity-name": "changeEntity",
+			"click .entity-star": "starEntity",
+			"click .entity-delete": "deleteEntity"
 		},
 		
 		changeEntity: function(event) {
@@ -149,36 +173,6 @@
 			});
 			return false;
 		}
-	});
-	
-	var AlterInputBtn = Backbone.View.extend({
-		tagName: 'div',
-		
-		initialize: function() {
-			this.el_AlterInputView = $('#alter-input')[0];
-			this.templateForBtn = _.template($('#tpl-alter-input-btn').html());
-			
-			this.alterInputShow = true;
-			this.on("change:alterInputShow", this.render, this);
-			
-			// hide alter input view initially
-			this.toggleAlterView();
-		},
-		
-		render: function(eventName) {
-			$(this.el).html(this.templateForBtn({"direction":this.alterInputShow?'left':'right'}));
-			return this;
-		},
-		
-		events: {
-			"click #alterInputBtn": "toggleAlterView"
-		},
-		
-		toggleAlterView: function() {
-			$(this.el_AlterInputView).toggle();
-			this.alterInputShow = !(this.alterInputShow);
-			this.trigger("change:alterInputShow");
-		},
 	});
 	
 	var AlterInputView = Backbone.View.extend({
@@ -249,106 +243,20 @@
 			});
 		}
 	});
-	
-	var ControlView = Backbone.View.extend({
-		tagName: 'div',
-		
-		initialize: function() {
-			this.template = _.template($('#tpl-control').html());
-			this.model.bind("add", this.render, this);
-			this.model.bind("destroy", this.render, this);
-			
-			this.groupCount = 1;
-			this.on("change:groupCount", this.render, this);
-		},
-		
-		render: function(event) {
-			this.validateGroupCount();
-			var obj = {
-				"groupCount" : this.groupCount,
-				"plusDisabled" : this.groupCount < this.model.length ? '' : 'disabled',
-				"minusDisabled": this.groupCount > 1 ? '' : 'disabled'
-			};
-			$(this.el).html(this.template(obj));
-			return this;
-		},
-		
-		validateGroupCount: function() {
-			if (isNaN(this.groupCount))
-				this.groupCount = 1;
-			else if (this.groupCount < 1)
-				this.groupCount = 1;
-			else if (this.groupCount > this.model.length)
-				this.groupCount = this.model.length;
-		},
-		
-		events: {
-			"change #groupCount": "change",
-			"click .plus": "addOne",
-			"click .minus": "minusOne",
-			"click #groupin": "group"
-		},
-		
-		change: function(event) {
-			this.groupCount = parseInt(event.target.value);
-			this.trigger("change:groupCount");
-		},
-		
-		addOne: function() {
-			this.groupCount++;
-			this.trigger("change:groupCount");
-		},
-		
-		minusOne: function() {
-			this.groupCount--;
-			this.trigger("change:groupCount");
-		},
-		
-		group: function() {
-			if (app.groupList)
-				app.groupList.reset();
-			else
-				app.groupList = new GroupCollection();
-				
-			// Create groups
-			var groupCount = parseInt($('#groupCount').val());
-			for (var i = 0; i < groupCount; i++)
-			{
-				app.groupList.push({index: i, name: "Group "+(i+1)});
-			}
-			
-			// Assign members to groups
-			var randomList = _.shuffle(app.entityList.where({starred: false}));
-			var randomStarredList = _.shuffle(app.entityList.where({starred: true}));
 
-			var groupIndex = 0;
-			_.each(randomList,function(entity){
-				entity.set("group",groupIndex);
-				groupIndex = (groupIndex+1) % groupCount;
-			});
-			_.each(randomStarredList,function(entity){
-				entity.set("group",groupIndex);
-				groupIndex = (groupIndex+1) % groupCount;
-			});
-			
-			if (!app.groupListView)
-				app.groupListView = new GroupListView({model: app.groupList});
-			
-			// hide alter input view 
-			if (app.alterInputBtn.alterInputShow)
-				app.alterInputBtn.toggleAlterView();
-			
-			$('#group-list').html(app.groupListView.render().el);
+	// ** END: ENTITIES *******************************************************************************
 
-			// show share button
-			if (!app.shareBtnView)
-			{
-				app.shareBtnView = new ShareBtnView();
-				$('#share').html(app.shareBtnView.render().el);	
-			}			
-			
+	// ** GROUPS **************************************************************************************
+
+	var Group = Backbone.Model.extend({
+		defaults: {
+			index: 0,
+			name: 'Group'
 		}
-		
+	});
+	
+	var GroupCollection = Backbone.Collection.extend({
+		model: Group
 	});
 	
 	var GroupListView = Backbone.View.extend({
@@ -422,6 +330,129 @@
 		}
 	});
 
+	// ** END: GROUPS *******************************************************************************
+
+	// ** CONTROLS **********************************************************************************
+
+	var ControlView = Backbone.View.extend({
+		tagName: 'div',
+		
+		initialize: function() {
+			this.template = _.template($('#tpl-control').html());
+			this.model.bind("add", this.render, this);
+			this.model.bind("destroy", this.render, this);
+			this.model.bind("reset", this.render, this);
+			
+			this.groupCount = 1;
+			this.on("change:groupCount", this.render, this);
+		},
+		
+		render: function(event) {
+			this.validateGroupCount();
+			var obj = {
+				"groupCount" : this.groupCount,
+				"plusDisabled" : this.groupCount < this.model.length ? '' : 'disabled',
+				"minusDisabled": this.groupCount > 1 ? '' : 'disabled'
+			};
+			$(this.el).html(this.template(obj));
+			return this;
+		},
+		
+		validateGroupCount: function() {
+			if (isNaN(this.groupCount))
+				this.groupCount = 1;
+			else if (this.groupCount < 1)
+				this.groupCount = 1;
+			else if (this.groupCount > this.model.length)
+				this.groupCount = this.model.length;
+		},
+		
+		events: {
+			"change #groupCount": "change",
+			"keypress #groupCount" : "enterGroup",
+			"click .plus": "addOne",
+			"click .minus": "minusOne",
+			"click #groupin": "group"
+		},
+		
+		change: function(event) {
+			this.groupCount = parseInt(event.target.value);
+			this.trigger("change:groupCount");
+		},
+		
+		enterGroup: function(event) {
+			if (event.keyCode === 13)
+			{
+				event.preventDefault();
+				return false;
+			}
+		},
+		
+		addOne: function() {
+			this.groupCount++;
+			this.trigger("change:groupCount");
+		},
+		
+		minusOne: function() {
+			this.groupCount--;
+			this.trigger("change:groupCount");
+		},
+		
+		group: function() {
+			if (app.groupList)
+				app.groupList.reset();
+			else
+				app.groupList = new GroupCollection();
+				
+			// Create groups
+			var groupCount = parseInt($('#groupCount').val());
+			for (var i = 0; i < groupCount; i++)
+			{
+				app.groupList.push({index: i, name: "Group "+(i+1)});
+			}
+			
+			// Assign members to groups
+			var randomList = _.shuffle(app.entityList.where({starred: false}));
+			var randomStarredList = _.shuffle(app.entityList.where({starred: true}));
+
+			var groupIndex = 0;
+			_.each(randomList,function(entity){
+				entity.set("group",groupIndex);
+				groupIndex = (groupIndex+1) % groupCount;
+			});
+			_.each(randomStarredList,function(entity){
+				entity.set("group",groupIndex);
+				groupIndex = (groupIndex+1) % groupCount;
+			});
+			
+			if (!app.groupListView)
+				app.groupListView = new GroupListView({model: app.groupList});
+			
+			// hide alter input view 
+			if (app.entityView.alterInputShow)
+				app.entityView.toggleAlterInput();
+			
+			$('#group-list').html(app.groupListView.render().el);
+
+			// show share button
+			if (!app.shareBtnView)
+			{
+				app.shareBtnView = new ShareBtnView();
+				$('#share').html(app.shareBtnView.render().el);	
+			}			
+			
+		}
+		
+	});
+
+	var GroupinModel = Backbone.Model.extend({
+		urlRoot: "api/groupin",
+		defaults: {
+			"entities": '',
+			"groups": ''
+		}
+	});
+
 	var ShareBtnView = Backbone.View.extend({
 
 		initialize: function() {
@@ -453,6 +484,10 @@
 			});
 		}
 	});
+
+	// ** END: CONTROLS *****************************************************************************
+
+	// ** ROUTER ************************************************************************************
 	
 	var AppRouter = Backbone.Router.extend({
 		
@@ -463,29 +498,18 @@
 		home: function() {
 			this.entityList = new EntityCollection();
 			
-			for (var i=0; i<10; i++)
-			{
-				this.entityList.push();
-			}
+			this.entityView = new EntityMainView({model:this.entityList});
+			$('#entity-view').html(this.entityView.render().el);
 			
-			this.entityListView = new EntityListView({model: this.entityList});
-			this.alterInputBtn = new AlterInputBtn();
-			
-			$('#entity-list').html(this.entityListView.render().el);
-			$('#entity-add').html(new EntityAddView().render().el);
-			$('#alter-input-toggler').html(this.alterInputBtn.render().el);
 			$('#alter-input').html(new AlterInputView().render().el);
 			$('#controls').html(new ControlView({model: this.entityList}).render().el);
 
 			// add additional ui
-			$('.star').tooltip({animation:true,title:'Starred names will be distributed fairly and equally among the groups.',delay:{show:800,hide:100}});
-			$('#entity-list').css("max-height",(window.innerHeight-$('#entity-list').offset().top-60)+"px");
-			$(window).resize(function(){
-				$('#entity-list').css("max-height",(window.innerHeight-$('#entity-list').offset().top-60)+"px");
-			});
-
+			$('.entity-star').tooltip({animation:true,title:'Starred names will be distributed fairly and equally among the groups.',delay:{show:800,hide:100}});
 		}
 	});
+
+	// ** END: ROUTER ********************************************************************************
 	
 	var app;
 	util.loadTemplates('template',function(){

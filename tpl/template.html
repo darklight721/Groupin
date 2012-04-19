@@ -1,26 +1,43 @@
-<script type="text/template" id="tpl-entity-list-item">
-	<div class='entity input-prepend input-append'>
-		<button class='star btn' type='button'><i class='icon-star<%= star %>'></i></button><input class='name' type='text' value='<%= name %>' placeholder='Insert name here' tabindex=<%= tabIndex %> /><button class='delete btn btn-danger' type='button'><i class='icon-remove'></i></button>
+<!-- Entity view templates -->
+<script type="text/template" id="tpl-entity-main">
+	<div class="drop-shadow">
+		<form class="form-horizontal">
+			<legend>
+				List of names
+				<span id="entity-count" class="badge" title="Count"></span>
+				<div class="btn-group pull-right">
+					<button id="entity-reset" class="btn btn-mini" type="button" title="Reset list"><i class="icon-repeat"></i></button>
+					<button id="alter-input-toggler" class="btn btn-mini" type="button" title="Alternative input">
+					</button>
+				</div>
+			</legend>
+			<div class="form-row">
+				<div class="input-append">
+					<input id="entity-name" type="text" placeholder="Enter name here" /><button id="entity-add" class="btn" type="button"><i class='icon-plus'></i></button>
+				</div>
+			</div>
+			<div class="form-row well">
+				<ul id="entity-list" class="nav nav-list"></ul>
+			</div>
+			
+		</form>
 	</div>
 </script>
 
-<script type="text/template" id="tpl-entity-add-item">
-	<div class='btn-group dropup'>
-		<button class='add btn span2' type='button' data-value='1'><i class='icon-plus'></i></button>
-		<button class='btn dropdown-toggle' data-toggle='dropdown'>
-			<span class='caret'></span>
-		</button>
-		<ul class='dropdown-menu span1'>
-			<li><a href='#' data-value='3'><i class='icon-plus'></i> 3 more</a></li>
-			<li><a href='#' data-value='5'><i class='icon-plus'></i> 5 more</a></li>
-			<li><a href='#' data-value='10'><i class='icon-plus'></i> 10 more</a></li>
-		</ul>
+<script type="text/template" id="tpl-alter-input-toggler">
+	<i class='icon-chevron-<%= direction %>'></i>
+</script>
+
+<script type="text/template" id="tpl-entity-list">
+	<div class="input-prepend input-append">
+	<button class="entity-star btn"><i class="icon-star<%= star %>"></i></button><input class="entity-name" type="text" value="<%= name %>" placeholder="Enter name here" tabindex=<%= tabIndex %> /><button class="entity-delete btn btn-danger"><i class="icon-remove"></i></button>
 	</div>
 </script>
 
-<script type="text/template" id="tpl-alter-input-btn">
-	<button id='alterInputBtn' class='btn btn-mini' type='button' title='Alternative Input'><i class='icon-chevron-<%= direction %>'></i></button>
+<script type="text/template" id="tpl-entity-count">
+	<%= count %>
 </script>
+<!-- End: Entity view templates -->
 
 <script type="text/template" id="tpl-alter-input-entity">
 	<div class='drop-shadow'>
