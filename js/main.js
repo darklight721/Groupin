@@ -179,7 +179,7 @@
 		tagName: 'div',
 		
 		initialize: function() {
-			this.template = _.template($('#tpl-alter-input-entity').html());
+			this.template = _.template($('#tpl-alter-input').html());
 			this.delimiter = '\n';
 		},
 		
@@ -190,9 +190,9 @@
 		
 		events: {
 			"change #delimiter": "change",
-			"change #otherDelimiter": "change",
+			"change #other-delimiter": "change",
 			"click #import": "import",
-			"change #fileInput": "readFile"
+			"change #file-input": "readFile"
 		},
 		
 		readFile: function(event) {
@@ -209,7 +209,7 @@
 			{
 				if ($('#delimiter').val() === 'other')
 				{
-					$('#otherDelimiter').show();
+					$('#other-delimiter').show();
 				}
 				else
 				{
@@ -225,7 +225,7 @@
 							this.delimiter = event.target.value;
 							break;
 					}
-					$('#otherDelimiter').hide();
+					$('#other-delimiter').hide();
 				}
 			}
 		},
@@ -283,16 +283,16 @@
 		tagName: 'div',
 		
 		initialize: function() {
-			this.template = _.template($('#tpl-group-list-item').html());
-			this.templateForEntity = _.template($('#tpl-group-list-entity').html());
-			this.model.bind("change", this.render, this);
+			this.tpl_main = _.template($('#tpl-group-list-item').html());
+			this.tpl_entity = _.template($('#tpl-group-list-entity').html());
+			//this.model.bind("change", this.render, this);
 			this.model.bind("destroy", this.close, this);
 		},
 		
 		render: function(eventName) {
-			$(this.el).html(this.template(this.model.toJSON()));
+			$(this.el).html(this.tpl_main(this.model.toJSON()));
 
-			var el_groupEntity = $(this.el).find(".group-entity-list");
+			var el_group_entity = $(this.el).find(".group-entity-list");
 			var groupEntities = app.entityList.where({group: this.model.get("index")});
 			_.each( groupEntities, function(entity){
 				var obj = {
@@ -300,11 +300,11 @@
 					"name" : entity.get("name"),
 					"hidden" : ""
 				};
-				$(el_groupEntity).append(this.templateForEntity(obj));
+				$(el_group_entity).append(this.tpl_entity(obj));
 			}, this);
 
 			// somehow needed to add a hidden div to correct misalignments of groupings
-			var groupCount = parseInt($('#groupCount').val());
+			var groupCount = parseInt($('#group-count').val());
 			var totalEntities = app.entityList.length;
 			if (groupEntities.length !== Math.ceil(totalEntities/groupCount))
 			{
@@ -313,7 +313,7 @@
 					"name" : "",
 					"hidden" : "hidden"
 				};
-				$(el_groupEntity).append(this.templateForEntity(obj));
+				$(el_group_entity).append(this.tpl_entity(obj));
 			}
 
 			return this;
@@ -368,8 +368,8 @@
 		},
 		
 		events: {
-			"change #groupCount": "change",
-			"keypress #groupCount" : "enterGroup",
+			"change #group-count": "change",
+			"keypress #group-count" : "enterGroup",
 			"click .plus": "addOne",
 			"click .minus": "minusOne",
 			"click #groupin": "group"
@@ -405,7 +405,7 @@
 				app.groupList = new GroupCollection();
 				
 			// Create groups
-			var groupCount = parseInt($('#groupCount').val());
+			var groupCount = parseInt($('#group-count').val());
 			for (var i = 0; i < groupCount; i++)
 			{
 				app.groupList.push({index: i, name: "Group "+(i+1)});
@@ -469,19 +469,22 @@
 		},
 
 		shareGroupin: function() {
-			var groupin = new GroupinModel();
-			groupin.set({
-				entities: JSON.stringify(app.entityList.toJSON()),
-				groups: JSON.stringify(app.groupList.toJSON())
-			});
-			groupin.save({
-				success: function() {
-					alert("sucess");
-				},
-				error: function() {
-					alert("error");
-				}
-			});
+			if (app.entityList.length && app.groupList.length)
+			{
+				var groupin = new GroupinModel();
+				groupin.set({
+					entities: JSON.stringify(app.entityList.toJSON()),
+					groups: JSON.stringify(app.groupList.toJSON())
+				});
+				groupin.save({
+					success: function() {
+						alert("sucess");
+					},
+					error: function() {
+						alert("error");
+					}
+				});
+			}
 		}
 	});
 

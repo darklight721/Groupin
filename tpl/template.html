@@ -39,14 +39,14 @@
 </script>
 <!-- End: Entity view templates -->
 
-<script type="text/template" id="tpl-alter-input-entity">
+<script type="text/template" id="tpl-alter-input">
 	<div class='drop-shadow'>
 		<form class='form-vertical'>
 			<legend>Alternative Input</legend>
 			<label for='text'><i class='icon-list'></i> Enter the list of names here and make sure to select the appropriate delimiter below</label>
 			<textarea id='text' rows='10'></textarea>
-			<label for='fileInput'><i class='icon-file'></i> Or you can just upload a text file</label>
-			<input id='fileInput' type='file' />
+			<label for='file-input'><i class='icon-file'></i> Or you can just upload a text file</label>
+			<input id='file-input' type='file' />
 			<label for='delimiter'><i class='icon-asterisk'></i> Delimiter</label>
 			<select id='delimiter'>
 				<option value=','>Comma</option>
@@ -55,19 +55,10 @@
 				<option value='\n' selected='selected'>New Line</option>
 				<option value='other'>Other...</option>
 			</select>
-			<input id='otherDelimiter' type='text' placeholder='Enter delimiter' style='display:none' />
+			<input id='other-delimiter' type='text' placeholder='Enter delimiter' style='display:none' />
 			<button id='import' class='btn' type='button'><i class='icon-backward'></i> Import</button>
 		</form>
 	</div>
-</script>
-
-<script type="text/template" id="tpl-control">
-	<form class='form-horizontal'>
-		<div class='input-prepend input-append'>
-			<span class='add-on font-small'>No. of groups</span><input id='groupCount' class='span1 text-center' type='text' value='<%= groupCount %>' /><button class='btn plus <%= plusDisabled %>' type='button'><i class='icon-plus-sign'></i></button><button class='btn minus <%= minusDisabled %>' type='button'><i class='icon-minus-sign'></i></button>
-		</div>
-		<button id='groupin' class='btn btn-primary' type='button'>Start Groupin!</button>
-	</form>
 </script>
 
 <script type="text/template" id="tpl-group-list-item">
@@ -85,6 +76,15 @@
 	<div class='group-entity input-prepend <%= hidden %>'>
 		<span class='add-on'><i class='icon-star<%= star %>'></i></span><input class='span2' type='text' value='<%= name %>' readonly='readonly' />
 	</div>
+</script>
+
+<script type="text/template" id="tpl-control">
+	<form class='form-horizontal'>
+		<div class='input-prepend input-append'>
+			<span class='add-on font-small'>No. of groups</span><input id='group-count' class='span1 text-center' type='text' value='<%= groupCount %>' /><button class='btn plus <%= plusDisabled %>' type='button'><i class='icon-plus-sign'></i></button><button class='btn minus <%= minusDisabled %>' type='button'><i class='icon-minus-sign'></i></button>
+		</div>
+		<button id='groupin' class='btn btn-primary' type='button'>Start Groupin!</button>
+	</form>
 </script>
 
 <script type="text/template" id="tpl-share-btn">
