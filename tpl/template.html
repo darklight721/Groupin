@@ -88,5 +88,21 @@
 </script>
 
 <script type="text/template" id="tpl-share-btn">
+	<div id='share-modal' class='modal hide fade'>
+		<div class='modal-header'>
+			<a class='close' data-dismiss='modal'>&times;</a>
+			<h3>Share your Groupin</h3>
+		</div>
+		<div id='share-body' class='modal-body'>
+			<p>Test</p>
+		</div>
+		<div class='modal-footer'>
+			<a href='#' class='btn'>Close</a>
+		</div>
+	</div>
 	<button class='share btn btn-primary pull-right' type='button'><i class='icon-share'></i> Share Groupin!</button>
+</script>
+
+<script type="text/template" id="tpl-share-body">
+	<p><a href='<%= link %>'><%= link %></a></p>
 </script>

@@ -438,11 +438,12 @@
 	var ShareBtnView = Backbone.View.extend({
 
 		initialize: function() {
-			this.template = _.template($('#tpl-share-btn').html());
+			this.tpl_btn = _.template($('#tpl-share-btn').html());
+			this.tpl_body = _.template($('#tpl-share-body').html());
 		},
 
 		render: function(eventName) {
-			$(this.el).html(this.template());
+			$(this.el).html(this.tpl_btn());
 			return this;
 		},
 
@@ -454,18 +455,26 @@
 			if (app.entityList.length && app.groupList.length)
 			{
 				var groupin = new GroupinModel();
-				groupin.set({
-					entities: JSON.stringify(app.entityList.toJSON()),
-					groups: JSON.stringify(app.groupList.toJSON())
-				});
-				groupin.save({
-					success: function() {
-						alert("sucess");
+				var self = this;
+				groupin.save(
+					{
+						entities: JSON.stringify(app.entityList.toJSON()),
+						groups: JSON.stringify(app.groupList.toJSON())
 					},
-					error: function() {
-						alert("error");
+					{
+						success: function() {
+							console.log(groupin.id);
+							var obj = {
+								link: 'http://localhost/groupin/#/' + groupin.id
+							};
+							$('#share-body').html(self.tpl_body(obj));
+							$('#share-modal').modal();
+						},
+						error: function() {
+							alert("error");
+						}
 					}
-				});
+				);
 			}
 		}
 	});
