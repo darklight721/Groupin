@@ -539,8 +539,13 @@
 	};
 
 	var showOtherUI = function() {
-		$('#alter-input').html(new AlterInputView().render().el);
-		$('#controls').html(new ControlView({model: this.entityList}).render().el);
+		if (!this.alterInputView)
+			this.alterInputView = new AlterInputView();
+		$('#alter-input').html(this.alterInputView.render().el);
+
+		if (!this.controls)
+			this.controls = new ControlView({model:this.entityList});
+		$('#controls').html(this.controls.render().el);
 
 		// add additional ui
 		$('.entity-star').tooltip({animation:true,title:'Starred names will be distributed fairly and equally among the groups.',delay:{show:800,hide:100}});
