@@ -399,16 +399,14 @@
 		},
 		
 		group: function() {
-			if (app.groupList)
-				app.groupList.reset();
-			else
-				app.groupList = new GroupCollection();
+
+			var groups = [];
 				
 			// Create groups
 			var groupCount = parseInt($('#group-count').val());
 			for (var i = 0; i < groupCount; i++)
 			{
-				app.groupList.push({index: i, name: "Group "+(i+1)});
+				groups.push({index: i, name: "Group "+(i+1)});
 			}
 			
 			// Assign members to groups
@@ -425,24 +423,8 @@
 				groupIndex = (groupIndex+1) % groupCount;
 			});
 			
-			if (!app.groupListView)
-				app.groupListView = new GroupListView({model: app.groupList});
-			
-			// hide alter input view 
-			if (app.entityView.alterInputShow)
-				app.entityView.toggleAlterInput();
-			
-			$('#group-list').html(app.groupListView.render().el);
-
-			// show share button
-			if (!app.shareBtnView)
-			{
-				app.shareBtnView = new ShareBtnView();
-				$('#share').html(app.shareBtnView.render().el);	
-			}			
-			
+			showGroups.call(app,groups);	
 		}
-		
 	});
 
 	var GroupinModel = Backbone.Model.extend({
@@ -495,24 +477,96 @@
 	var AppRouter = Backbone.Router.extend({
 		
 		routes: {
-			"": "home"
+			"" : "home",
+			":id" : "loadSave" 
 		},
 		
 		home: function() {
-			this.entityList = new EntityCollection();
-			
-			this.entityView = new EntityMainView({model:this.entityList});
-			$('#entity-view').html(this.entityView.render().el);
-			
-			$('#alter-input').html(new AlterInputView().render().el);
-			$('#controls').html(new ControlView({model: this.entityList}).render().el);
+			showEntities.call(this);
+			showOtherUI.call(this);
+		},
 
-			// add additional ui
-			$('.entity-star').tooltip({animation:true,title:'Starred names will be distributed fairly and equally among the groups.',delay:{show:800,hide:100}});
+		loadSave: function(id) {
+			var groupin = new GroupinModel();
+			groupin.set("id",id);
+			var self = this;
+			groupin.fetch({
+				success: function() {
+					var entities = JSON.parse(groupin.get("entities"));
+					showEntities.call(self,entities);
+					
+					showOtherUI.call(self);
+
+					var groups = JSON.parse(groupin.get("groups"));
+					showGroups.call(self,groups);
+				},
+				error: function() {
+					alert("error");
+				}
+			});
 		}
 	});
 
 	// ** END: ROUTER ********************************************************************************
+
+	var showEntities = function(entities) {
+		if (this.entityList)
+		{
+			this.entityList.reset();
+		}
+		else
+		{
+			this.entityList = new EntityCollection();
+		}
+
+		if (entities)
+			this.entityList.add(entities, {silent: true});
+
+		if (this.entityView)
+			this.entityView.close();
+		
+		this.entityView = new EntityMainView({model:this.entityList});
+		$('#entity-view').html(this.entityView.render().el);
+	};
+
+	var showOtherUI = function() {
+		$('#alter-input').html(new AlterInputView().render().el);
+		$('#controls').html(new ControlView({model: this.entityList}).render().el);
+
+		// add additional ui
+		$('.entity-star').tooltip({animation:true,title:'Starred names will be distributed fairly and equally among the groups.',delay:{show:800,hide:100}});
+	};
+
+	var showGroups = function(groups) {
+		if (this.groupList)
+		{
+			this.groupList.reset();
+		}
+		else
+		{
+			this.groupList = new GroupCollection();
+		}
+
+		if (groups)
+			this.groupList.add(groups, {silent: true});
+
+		if (this.groupListView)
+			this.groupListView.close();
+
+		this.groupListView = new GroupListView({model:this.groupList});
+		$('#group-list').html(this.groupListView.render().el);
+
+		// hide alter input view 
+		if (this.entityView.alterInputShow)
+			this.entityView.toggleAlterInput();
+
+		// show share button
+		if (!this.shareBtnView)
+		{
+			this.shareBtnView = new ShareBtnView();
+			$('#share').html(this.shareBtnView.render().el);	
+		}	
+	};
 	
 	var app;
 	util.loadTemplates('template',function(){
