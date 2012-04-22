@@ -459,18 +459,19 @@
 		shareGroupin: function() {
 			if (app.entityList.length && app.groupList.length)
 			{
-				var groupin = new GroupinModel();
+				if (!app.groupin)
+					app.groupin = new GroupinModel();
 				var self = this;
-				groupin.save(
+				app.groupin.save(
 					{
 						entities: JSON.stringify(app.entityList.toJSON()),
 						groups: JSON.stringify(app.groupList.toJSON())
 					},
 					{
 						success: function() {
-							console.log(groupin.id);
+							console.log(app.groupin.id);
 							var obj = {
-								link: 'http://localhost/groupin/#/' + groupin.id
+								link: 'http://localhost/groupin/#/' + app.groupin.id
 							};
 							$('#share-body').html(self.tpl_body(obj));
 							$('#share-modal').modal();
@@ -501,17 +502,18 @@
 		},
 
 		loadSave: function(id) {
-			var groupin = new GroupinModel();
-			groupin.set("id",id);
+			if (!this.groupin)
+				this.groupin = new GroupinModel();
+			this.groupin.set("id",id);
 			var self = this;
-			groupin.fetch({
+			this.groupin.fetch({
 				success: function() {
-					var entities = JSON.parse(groupin.get("entities"));
+					var entities = JSON.parse(self.groupin.get("entities"));
 					showEntities.call(self,entities);
 					
 					showOtherUI.call(self);
 
-					var groups = JSON.parse(groupin.get("groups"));
+					var groups = JSON.parse(self.groupin.get("groups"));
 					
 					// set group count
 					self.controls.groupCount = groups.length;

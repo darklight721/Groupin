@@ -6,6 +6,7 @@ $app = new Slim();
 
 $app->get('/groupin/:id', 'getGroupin');
 $app->post('/groupin', 'addGroupin');
+$app->put('/groupin/:id', 'updateGroupin');
 
 $app->run();
 
@@ -35,6 +36,25 @@ function addGroupin() {
 		$stmt->bindParam("groups", $groupin->groups);
 		$stmt->execute();
 		$groupin->id = $db->lastInsertId();
+		$db = null;
+		echo json_encode($groupin);
+	} catch(PDOException $e) {
+		echo '{"error":{"text":'. $e->getMessage() .'}}';
+	}
+}
+
+function updateGroupin($id) {
+	$request = Slim::getInstance()->request();
+	$body = $request->getBody();
+	$groupin = json_decode($body);
+	$sql = "UPDATE groupin SET entities=:entities, groups=:groups where id=:id";
+	try {
+		$db = getConnection();
+		$stmt = $db->prepare($sql);
+		$stmt->bindParam("entities", $groupin->entities);
+		$stmt->bindParam("groups", $groupin->groups);
+		$stmt->bindParam("id", $id);
+		$stmt->execute();
 		$db = null;
 		echo json_encode($groupin);
 	} catch(PDOException $e) {
