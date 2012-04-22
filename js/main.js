@@ -62,6 +62,12 @@
 		renderAlterInputToggler: function() {
 			var el_alter_input_toggler = $(this.el).find('#alter-input-toggler');
 			$(el_alter_input_toggler).html(this.tpl_alter_input_toggler({"direction":this.alterInputShow?'left':'right'}));
+
+			//$("#alter-input").toggle();
+			if (this.alterInputShow)
+				$("#alter-input").show();
+			else
+				$("#alter-input").hide();
 		},
 		
 		renderEntities: function() {
@@ -89,7 +95,6 @@
 		},
 		
 		toggleAlterInput: function() {
-			$("#alter-input").toggle();
 			this.alterInputShow = !(this.alterInputShow);
 			this.trigger("change:alterInputShow");
 		},
@@ -507,6 +512,11 @@
 					showOtherUI.call(self);
 
 					var groups = JSON.parse(groupin.get("groups"));
+					
+					// set group count
+					self.controls.groupCount = groups.length;
+					self.controls.trigger("change:groupCount");
+
 					showGroups.call(self,groups);
 				},
 				error: function() {
