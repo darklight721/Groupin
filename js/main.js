@@ -496,6 +496,7 @@
 						{ new_edit_passcode: passcode },
 						{
 							success: function() {
+								app.groupin.set("edit_passcode", passcode);
 								alert("Passcode saved.");
 							},
 							error: function() {
