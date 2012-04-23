@@ -105,8 +105,18 @@
 
 <script type="text/template" id="tpl-share-body">
 	<p>
-		Share this link to your people: <a href='<%= link %>'><%= link %></a><br/><br/>
+		<form class="form-horizontal">
+			<label for="passcode">Add a passcode to edit your groupin in the future:</label>
+			<input id="passcode" type="text" placeholder="Enter passcode" />
+			<button id="save-passcode" class="btn" type="button">Save passcode</button>
+		</form>
+		<br/>
+		<br/>
+		Share this link to your people: <a href='<%= link %>' target='_blank'><%= link %></a><br/><br/>
 		<a href="https://twitter.com/share" class="twitter-share-button" data-url="<%= link %>" data-text="Check out my groupins" data-via="groupin" data-count="none" data-hashtags="groupin">Tweet your groupin!</a>
 		<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+
+		
+
 	</p>
 </script>

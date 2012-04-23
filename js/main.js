@@ -453,7 +453,8 @@
 		},
 
 		events: {
-			"click .share": "shareGroupin"
+			"click .share": "shareGroupin",
+			"click #save-passcode": "savePasscode"
 		},
 
 		shareGroupin: function() {
@@ -482,6 +483,28 @@
 					}
 				);
 			}
+		},
+
+		savePasscode: function() {
+			var passcode = $('#passcode').val();
+			if (passcode.length)
+			{
+				if (app.groupin)
+				{
+					var self = this;
+					app.groupin.save(
+						{ new_edit_passcode: passcode },
+						{
+							success: function() {
+								alert("Passcode saved.");
+							},
+							error: function() {
+								alert("error");
+							}
+						}
+					);
+				}
+			}
 		}
 	});
 
@@ -509,9 +532,9 @@
 			this.groupin.fetch({
 				success: function() {
 					var entities = JSON.parse(self.groupin.get("entities"));
-					showEntities.call(self,entities);
+					showEntities.call(self,entities,true);
 					
-					showOtherUI.call(self);
+					showOtherUI.call(self,true);
 
 					var groups = JSON.parse(self.groupin.get("groups"));
 					
@@ -530,7 +553,7 @@
 
 	// ** END: ROUTER ********************************************************************************
 
-	var showEntities = function(entities) {
+	var showEntities = function(entities, isHidden) {
 		if (this.entityList)
 		{
 			this.entityList.reset();
@@ -545,12 +568,18 @@
 
 		if (this.entityView)
 			this.entityView.close();
-		
+
+		if (isHidden && isHidden === true)
+			$('#entity-view').hide();
+
 		this.entityView = new EntityMainView({model:this.entityList});
 		$('#entity-view').html(this.entityView.render().el);
 	};
 
-	var showOtherUI = function() {
+	var showOtherUI = function(isHidden) {
+		if (isHidden && isHidden === true)
+			$('#alter-input,#controls').hide();
+
 		if (!this.alterInputView)
 			this.alterInputView = new AlterInputView();
 		$('#alter-input').html(this.alterInputView.render().el);
@@ -583,7 +612,7 @@
 		$('#group-list').html(this.groupListView.render().el);
 
 		// hide alter input view 
-		if (this.entityView.alterInputShow)
+		if (this.entityView && this.entityView.alterInputShow)
 			this.entityView.toggleAlterInput();
 
 		// show share button
