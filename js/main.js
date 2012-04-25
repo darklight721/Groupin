@@ -46,7 +46,7 @@
 				self.renderEntityCount();
 			});
 			
-			this.alterInputShow = true;
+			this.alterInputShow = false;
 			this.on("change:alterInputShow", this.renderAlterInputToggler, this);
 			
 		},
@@ -55,7 +55,7 @@
 			$(this.el).html(this.tpl_main());
 			this.renderAlterInputToggler();
 			this.renderEntities();
-			this.toggleAlterInput();
+			//this.toggleAlterInput();
 			return this;
 		},
 		
@@ -509,6 +509,67 @@
 		}
 	});
 
+	var EditBtnView = Backbone.View.extend({
+
+		initialize: function() {
+			this.tpl_btn = _.template($('#tpl-edit-btn').html());
+			this.tpl_body = _.template($('#tpl-edit-body').html());
+		},
+
+		render: function(eventName) {
+			$(this.el).html(this.tpl_btn());
+			return this;
+		},
+
+		events: {
+			"click .edit": "editGroupin",
+			"click #submit-passcode": "submitPasscode"
+		},
+
+		editGroupin: function() {
+			var obj = {
+				'status' : '',
+				'passcode' : '',
+				'error' : ''
+			};
+			$('#edit-body').html(this.tpl_body(obj));
+			$('#edit-modal').modal();
+		},
+
+		submitPasscode: function() {
+			var passcode = $('#edit-passcode').val();
+			if (passcode.length)
+			{
+				if (app.groupin)
+				{
+					var self = this;
+					$.ajax('api/groupin/' + app.groupin.id + '/' + passcode).done(function(data){
+						if (data === 'false')
+						{
+							var obj = {
+								'status' : 'error',
+								'passcode' : passcode,
+								'error' : 'Passcode did not match!'
+							};
+							$('#edit-body').html(self.tpl_body(obj));
+						}
+						else
+						{
+							app.groupin.set('edit_passcode',passcode);
+							$('#edit-modal').modal('hide');
+							$(self.el).hide();
+							//app.navigate('');
+							$('#entity-view').show();
+							$('#controls').show();
+
+						}
+					});
+					
+				}
+			}
+		}
+	});
+
 	// ** END: CONTROLS *****************************************************************************
 
 	// ** ROUTER ************************************************************************************
@@ -544,6 +605,11 @@
 					self.controls.trigger("change:groupCount");
 
 					showGroups.call(self,groups);
+
+					if (!self.editBtnView)
+						self.editBtnView = new EditBtnView();
+
+					$('#edit').html(self.editBtnView.render().el);
 				},
 				error: function() {
 					alert("error");
@@ -621,7 +687,7 @@
 		{
 			this.shareBtnView = new ShareBtnView();
 			$('#share').html(this.shareBtnView.render().el);	
-		}	
+		}
 	};
 	
 	var app;

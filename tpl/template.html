@@ -100,7 +100,7 @@
 			<a href='#' class='btn' data-dismiss='modal'>Close</a>
 		</div>
 	</div>
-	<button class='share btn btn-primary pull-right' type='button'><i class='icon-share'></i> Share Groupin!</button>
+	<button class='share btn btn-primary' type='button'><i class='icon-share'></i> Share Groupin!</button>
 </script>
 
 <script type="text/template" id="tpl-share-body">
@@ -115,8 +115,36 @@
 		Share this link to your people: <a href='<%= link %>' target='_blank'><%= link %></a><br/><br/>
 		<a href="https://twitter.com/share" class="twitter-share-button" data-url="<%= link %>" data-text="Check out my groupins" data-via="groupin" data-count="none" data-hashtags="groupin">Tweet your groupin!</a>
 		<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-
-		
-
 	</p>
+</script>
+
+<script type="text/template" id="tpl-edit-btn">
+	<div id='edit-modal' class='modal hide fade'>
+		<div class='modal-header'>
+			<a class='close' data-dismiss='modal'>&times;</a>
+			<h3>Edit this groupin</h3>
+		</div>
+		<div id='edit-body' class='modal-body'>
+		</div>
+		<div class='modal-footer'>
+			<button id='submit-passcode' class='btn'>Submit</button>
+			<button class='btn' data-dismiss='modal'>Close</button>
+		</div>
+	</div>
+	<button class='edit btn btn-primary' type='button'><i class='icon-edit'></i> Edit Groupin!</button>
+</script>
+
+<script type="text/template" id="tpl-edit-body">
+	<form class='form-horizontal'>
+		<fieldset>
+			<div class='control-group <%= status %>'>
+				<label class='control-label' for='edit-passcode'>Passcode</label>
+				<div class='controls'>
+					<input id='edit-passcode' type='text' placeholder='Enter passcode' value='<%= passcode %>' />
+					<span class='help-inline'><%= error %></span>
+					<p class='help-block'>If you don't have the passcode, ask from the one who shared this groupin link to you.</p>
+				</div>
+			</div>
+		</fieldset>
+	</form>
 </script>

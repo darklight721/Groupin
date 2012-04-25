@@ -5,6 +5,7 @@ require 'Slim/Slim.php';
 $app = new Slim();
 
 $app->get('/groupin/:id', 'getGroupin');
+$app->get('/groupin/:id/:passcode', 'checkPasscode');
 $app->post('/groupin', 'addGroupin');
 $app->put('/groupin/:id', 'updateGroupin');
 
@@ -16,6 +17,22 @@ function getGroupin($id) {
 		$db = getConnection();
 		$stmt = $db->prepare($sql);
 		$stmt->bindParam("id", $id);
+		$stmt->execute();
+		$groupin = $stmt->fetchObject();
+		$db = null;
+		echo json_encode($groupin);
+	} catch(PDOException $e) {
+		echo '{"error":{"text":'. $e->getMessage() .'}}';
+	}
+}
+
+function checkPasscode($id,$passcode) {
+	$sql = "SELECT id, entities, groups, edit_passcode FROM groupin WHERE id=:id and edit_passcode=:passcode";
+	try {
+		$db = getConnection();
+		$stmt = $db->prepare($sql);
+		$stmt->bindParam("id", $id);
+		$stmt->bindParam("passcode", $passcode);
 		$stmt->execute();
 		$groupin = $stmt->fetchObject();
 		$db = null;
