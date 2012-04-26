@@ -339,6 +339,14 @@
 
 	// ** CONTROLS **********************************************************************************
 
+	var GroupinModel = Backbone.Model.extend({
+		urlRoot: "api/groupin",
+		defaults: {
+			"entities": '',
+			"groups": ''
+		}
+	});
+
 	var ControlView = Backbone.View.extend({
 		tagName: 'div',
 		
@@ -428,17 +436,20 @@
 				groupIndex = (groupIndex+1) % groupCount;
 			});
 			
-			showGroups.call(app,groups);	
+			showGroups.call(app,groups);
+
+			// save to Groupin model
+			if (!app.groupin)
+			{
+				app.groupin = new GroupinModel();
+			}
+
+			app.groupin.set("entities", JSON.stringify(app.entityList.toJSON()));
+			app.groupin.set("groups", JSON.stringify(app.groupList.toJSON()));
 		}
 	});
 
-	var GroupinModel = Backbone.Model.extend({
-		urlRoot: "api/groupin",
-		defaults: {
-			"entities": '',
-			"groups": ''
-		}
-	});
+	
 
 	var ShareBtnView = Backbone.View.extend({
 
@@ -458,6 +469,20 @@
 		},
 
 		shareGroupin: function() {
+			if (app.groupin)
+			{
+				var self = this;
+				app.groupin.save().done(function() {
+					console.log(app.groupin.id);
+					var obj = {
+						link: 'http://localhost/groupin/#/' + app.groupin.id
+					};
+					$('#share-body').html(self.tpl_body(obj));
+					$('#share-modal').modal();
+				});
+			}
+
+			/*
 			if (app.entityList.length && app.groupList.length)
 			{
 				if (!app.groupin)
@@ -483,6 +508,7 @@
 					}
 				);
 			}
+			*/
 		},
 
 		savePasscode: function() {
